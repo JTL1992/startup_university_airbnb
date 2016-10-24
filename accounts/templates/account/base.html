@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+{% block content %}
+{% if messages %}
+    <div>
+      <strong>Messages:</strong>
+      <ul>
+	{% for message in messages %}
+	   <div class="alert alert-{{message.level_tag}}" role="alert">
+ 	       {{message}}
+       </div>
+	{% endfor %}
+      </ul>
+    </div>
+{% endif %}
+{% block account_content %}
+{% endblock %}
+
+{% endblock %}
