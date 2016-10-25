@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load gravatar %}
+{% load bootstrap %}
+<head>
+    <meta charset="UTF-8">
+    {% block title %}
+         <title>profile de {{ user.username }}</title>
+    {% endblock %}
+</head>
+<body>
+    {% include 'navbar.html' %}
+    {% block content %}
+        {% if user %}
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="text-center" style="margin-top: 20px">
+                        {% if user.socialaccount_set.all.count %}
+                            <img  class="img-thumbnail" src="{{ user.socialaccount_set.all.0.get_avatar_url }}" width="200" height="500"/>
+                        {% else %}
+                            <img  class="img-thumbnail" src="{% gravatar_url user.email 300 %}" width="200" height="500"/>
+                        {% endif %}
+                    </div>
+                    <div class="text-center" style="margin-top: 20px">
+                         <div class="panel panel-default" style="margin: auto; width: 200px;">
+                         <div class="panel-heading text-center" style="font-size: large;margin-bottom: 10px"> Verification </div>
+                             <div class="panel-body">
+                                 {% if user.email %}
+                                     <li>Email Address</li>
+                                 {% endif %}
+                                 {% if profile.phone %}
+                                     <li>Phone Number</li>
+                                 {% endif %}
+                             </div>
+                    </div>
+                    </div>
+                </div>
+                <div class="col-lg-8 ">
+                    <h1>{{ user.username }}</h1>
+                    <p>{{ profile.description }}</p>
+                </div>
+            </div>
+
+
+{#            <p>Following is the Extra information that facebook has provided to allauth:</p>#}
+{#            {% for account in user.socialaccount_set.all %}#}
+{#                <h2 style="text-transform:capitalize;">{{ account.provider }} account data</h2>#}
+{#                <p><img width="50" height="50" src="{{ account.get_avatar_url }}" /></p>#}
+{#                <p>UID: <a href="{{account.extra_data.link }}">{{ account.uid }}</a></p>#}
+{#                <p>Username: {{ account.extra_data.username }}</p>#}
+{#                <p>First Name: {{ account.extra_data.first_name }}</p>#}
+{#                <p>Last Name: {{ account.extra_data.last_name }}</p>#}
+{#                <p>Profile Link: <a href="{{ account.extra_data.link }}">{{ account.extra_data.link }}</a></p>#}
+{#            {% endfor %}#}
+        {% endif %}
+    {% endblock %}
+</body>
+</html>

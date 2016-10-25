@@ -4,10 +4,14 @@
 {% load crispy_forms_tags %}
 {% load gravatar %}
 {% load bootstrap %}
+{% load staticfiles %}
 <head>
     <meta charset="UTF-8">
     {% block title %}
          <title>profile de {{ user.username }}</title>
+    {% endblock %}
+    {% block css %}
+    <link rel="stylesheet" href="{% static 'css/accounts.css' %}">
     {% endblock %}
 </head>
 <body>
@@ -15,34 +19,39 @@
     {% block content %}
         {% if user %}
             <div class="row">
-                <div class="col-lg-4">
+                <div class="col-md-3">
                     <div class="text-center" style="margin-top: 20px">
                         <ul class="sidebar-list">
                             <li class="sidebar-item">
-                                <a href="/accounts/profile/"> Edit Profile</a>
+                                <h3> Edit Profile</h3>
                             </li>
-                            <li>
-
-                            </li>
+                            <hr>
                         </ul>
-                        {% if user.socialaccount_set.all.count %}
-                            <img width="150" height="300" src="{{ user.socialaccount_set.all.0.get_avatar_url }}"/>
-                        {% else %}
-                            <img width="150" height="300" src="{% gravatar_url user.email 300 %}"/>
-                        {% endif %}
+                        <div style="margin-top: 20px">
+                            {% if user.socialaccount_set.all.count %}
+                                <img width="200" height="300" class="img-thumbnail" src="{{ user.socialaccount_set.all.0.get_avatar_url }}"/>
+                            {% else %}
+                                <img width="200" height="300" class="img-thumbnail" src="{% gravatar_url user.email 300 %}"/>
+                            {% endif %}
+                        </div>
+                    <div style="margin-top: 20px">
+                         <a class="btn btn-default" href="{% url 'public_profile' user.id %}"> View My Profile </a>
+                    </div>
                     </div>
                 </div>
-                <div class="col-lg-8 ">
-                    <div class="panel panel-default">
-                         <div class="panel-heading text-center" style="font-size: large;margin-bottom: 10px">{{ user.username|capfirst }} Profile</div>
-                    <div class="panel-body">
-                         <form class="login" method="post" action="">{% csrf_token %}
-                        {{ form|crispy }}
-                         <div class="text-center">
-                             <input type="submit" class="btn btn-primary" value="Update">
-                         </div>
-                    </form>
-                    </div>
+                <div class="col-md-9 ">
+                    <div class="panel panel-default" style="margin-top: 20px">
+                        <div class="panel-heading text-center"
+                             style="font-size: large;margin-bottom: 10px">{{ user.username|capfirst }} Profile
+                        </div>
+                        <div class="panel-body">
+                            <form class="login" style="margin: auto" method="post" action="">{% csrf_token %}
+                                {{ form|crispy }}
+                                <div class="text-center">
+                                    <input type="submit" class="btn btn-primary" value="Update">
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>

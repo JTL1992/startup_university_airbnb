@@ -36,3 +36,10 @@
 .error {
   color: #fe2617;
 }
+
+hr {
+  height: 5px;
+  background-color: #d9d9d9;
+  width: 200px;
+  margin: 10px auto 10px;
+}

@@ -1,11 +1,13 @@
+from django.contrib.auth.models import User
 from django.shortcuts import render, render_to_response
 from allauth.account.views import *
 from django.template import RequestContext
-from base.helper import add_notification
+from base.helper import add_notification, convert_message_to_toastr
 from django.views.decorators.csrf import csrf_protect
 from models import UserProfile
 from forms import UserForm
 from django.contrib import messages
+from django.core.urlresolvers import reverse
 
 # Create your views here.
 
@@ -21,7 +23,7 @@ def my_profile(request):
             messages.add_message(request, messages.SUCCESS, 'update user information successfully')
         else:
             messages.add_message(request, messages.ERROR, 'update user information unsuccessfully')
-        return HttpResponseRedirect(reverse('home'))
+        return HttpResponseRedirect(reverse('public_profile', kwargs={'user_id': user.id}))
     else:
         phone = ''
         description = ''
@@ -55,3 +57,10 @@ def save_profile(user, form):
         new_profile = UserProfile(user=user, phone=profile['phone'], description=profile['description'])
         new_profile.save()
 
+
+@login_required()
+def public_profile(request, user_id):
+    user = User.objects.get(id=user_id)
+    message = convert_message_to_toastr(messages.get_messages(request))
+    profile = user.userprofile_set.get()
+    return render_to_response('public_profile.html', {'user': user, 'messages': message,'profile': profile})
