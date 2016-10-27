@@ -5,6 +5,18 @@
 {% block content %}
 
 {% block account_content %}
+    {% if messages %}
+    <div>
+      <strong>Messages:</strong>
+      <ul>
+	{% for message in messages %}
+	<li class="alert alert-{{ message.tags }}">
+        {{message}}
+    </li>
+	{% endfor %}
+      </ul>
+    </div>
+    {% endif %}
 {% endblock %}
 
 {% endblock %}

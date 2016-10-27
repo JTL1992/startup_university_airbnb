@@ -1,5 +1,6 @@
 {% load socialaccount %}
 {% load gravatar %}
+{% load bootstrap %}
 <header class="header">
     <div class="container">
         <nav class="navbar navbar-default navbar-static-top " role="navigation">
@@ -16,15 +17,23 @@
             <div id="main-nav" class="collapse navbar-collapse">
                 <ul class="nav navbar-nav navbar-right">
                 {% if user.is_authenticated %}
+                    <li class="" style="margin-top:3px">
+                        {% if user.room_set.all.count %}
+                            <a href="{% url 'rooms_list' %}"> Host <span class="glyphicon glyphicon-home"></span></a>
+                        {% else %}
+                            <a href="{% url 'become_a_host' %}"> Become a host <span class="glyphicon glyphicon-home"></span></a>
+                        {% endif %}
+                    </li>
                     <li class="dropdown">
                         <a href="#" data-toggle="dropdown">
-                            {% if user.socialaccount_set.all.count %}
-                                <img width="30" height="30" class="img-circle" src="{{user.socialaccount_set.all.0.get_avatar_url }}" />
-                            {% else %}
-                                <img width="30" height="30" class="img-circle" src="{% gravatar_url user.email 35 %}" />
-                            {% endif %}
                             {{ user.username }}
-                            <span class="caret"></span>
+                            {% if user.socialaccount_set.all.count %}
+                                <img width="30" height="30" class="img-circle"
+                                     src="{{ user.socialaccount_set.all.0.get_avatar_url }}"/>
+                            {% else %}
+                                <img width="30" height="30" class="img-circle" src="{% gravatar_url user.email 30 %}"/>
+                            {% endif %}
+{#                           <span class="caret"></span>#}
                         </a>
                         <ul class="dropdown-menu" role="menu">
                             <li ><a href={% url 'account_profile' %} >Profile</a></li>
@@ -33,8 +42,8 @@
                         </ul>
                     </li>
                 {% else %}
-                    <li> <a href="{% url 'account_login' %}">signin</a> </li>
-                    <li> <a href="{% url 'account_signup' %}">signup</a> </li>
+                    <li> <a href="{% url 'account_login' %}"><span class="glyphicon glyphicon-log-in"></span> Login </a> </li>
+                    <li> <a href="{% url 'account_signup' %}"><span class="glyphicon glyphicon-user"></span> Signup </a> </li>
                 {% endif %}
                 </ul>
             </div>

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+{% extends 'base.html' %}
+{% load bootstrap %}
+<head>
+    <meta charset="UTF-8">
+    {% block title %}
+        <title>room list</title>
+    {% endblock %}
+</head>
+<body>
+    {% block content %}
+        {% if rooms %}
+            <ul>
+            {% for room in rooms %}
+                <li><a href="{% url 'room_section' room.id %}"> {{ room.room_type }} in {{ room.city_country }}</a></li>
+            {% endfor %}
+            </ul>
+        {% else %}
+        {% endif %}
+    {% endblock %}
+</body>
+</html>

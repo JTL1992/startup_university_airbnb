@@ -16,6 +16,7 @@
 <link rel="stylesheet" href="{% static "css/owl.carousel.css" %}" />
 <link rel="stylesheet" href="{% static "css/styles.css" %}" />
 <!-- Font Awesome -->
+<link rel="stylesheet" href="{% static 'css/font-awesome.css' %}">
 <!--toastr-->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" >
 {% block css %}{% endblock %}
@@ -72,10 +73,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script src="{% static 'js/toastr.js' %}"></script>
     <script type="text/javascript">
-        var messages = {{ messages|safe }};
-        messages.forEach(function(m){
+        if ({{ messages|safe }}){
+            var messages = {{ messages|safe }};
+            messages.forEach(function(m){
             toastr[m['tag']](m['msg'])
-        })
+        })}
     </script>
     {% block js %}{% endblock %}
 </body>

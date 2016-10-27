@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+{% extends 'base.html' %}
+{% load staticfiles %}
+<head>
+    <meta charset="UTF-8">
+    {% block title %}
+        <title>location form</title>
+    {% endblock %}
+</head>
+<body>
+
+    {% block js %}
+        <script src="http://maps.googleapis.com/maps/api/js?libraries=places"></script>
+        <script src="{% static 'js/jquery.geocomplete.js' %}"></script>
+    {% endblock %}
+</body>
+</html>

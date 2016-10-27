@@ -267,6 +267,7 @@ background: none;
         color: #000000;
     }
 
+
 .header .navbar {
     margin: 0;
     background: #fff;
@@ -293,6 +294,7 @@ background: none;
 .header .navbar-nav > li > a {
     padding: 25px 18px;
     text-transform: uppercase;
+
 }
 
 .page-section {
