@@ -5,31 +5,27 @@
 <head>
     <meta charset="UTF-8">
     {% block title %}
-    <title>Edit home type</title>
+    <title>Edit spaces</title>
     {% endblock %}
 </head>
 <body>
     {% block content %}
         <div class="panel panel-default">
-            <div class="panel-heading"><h3>What kind of place you are listing?</h3></div>
+            <div class="panel-heading"><h3></h3></div>
             <div class="panel-body">
                 <form action="" method="post">{% csrf_token %}
                     <div class="container">
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    {{ form.room_type|bootstrap }}
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    {{ form.home_type|bootstrap }}
+                                    <h3>What spaces can guests use?</h3>
+                                    {{ form|bootstrap }}
                                 </div>
                             </div>
                         </div>
                         <div class="">
-                            <a href="{% url 'room_section' room_id %}" class="btn btn-default" > Back </a>
-                            <input type="submit" class="btn btn-primary" value="Next">
+                            <a href="{% url 'amenities' room_id %}" class="btn btn-default" > Back </a>
+                            <input type="submit" class="btn btn-primary" value="Finish">
                         </div>
                     </div>
                 </form>
