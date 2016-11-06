@@ -15,7 +15,7 @@
                         <li>STEP 1</li>
                         <li>Start with the basics</li>
                         <li>Beds, bathrooms, amenities, and more</li>
-                        <li><a href="{{ url }}" class="btn btn-default">Continue</a></li>
+                        <li><a href="{% url page_url.0  room_id %}" class="btn btn-default">{{ button.0 }}</a></li>
                     </ul>
                 </div>
             </div>
@@ -26,7 +26,9 @@
                         <li>STEP 2</li>
                         <li>Set the scene</li>
                         <li>photos, short description, title</li>
-                        <li><button class="btn btn-default">Continue</button></li>
+                        {% if button.1 %}
+                            <li><a href="{% url page_url.1 room_id %}" class="btn btn-default">{{ button.1 }}</a></li>
+                        {% endif %}
                     </ul>
                 </div>
             </div>
@@ -37,11 +39,44 @@
                         <li>STEP 3</li>
                         <li>Get ready for guests</li>
                         <li>Booking settings, calender, price</li>
-                        <li><button class="btn btn-default">Continue</button></li>
+                        {% if button.2 %}
+                            <li><a href="{% url page_url.2 room_id %}" class="btn btn-default">{{ button.2 }}</a></li>
+                        {% endif %}
                     </ul>
                 </div>
             </div>
+
+            <div class="row">
+                <div class="col-md-4">
+                   {% if button.3 %}
+                       <a id="active" href="#" class="btn btn-default">{{ button.3 }}</a>
+                   {% endif %}
+                </div>
+            </div>
         </div>
+    {% endblock %}
+    {% block js %}
+        <script type="text/javascript">
+        $(function(){
+            let url = window.location.pathname;
+            url = url.replace('section', 'active');
+            $('#active').click(function(){
+                $.ajax({
+                    type: 'POST',
+                        url: url,
+                        data:{
+                            active: $(this).text(),
+                            csrfmiddlewaretoken: '{{ csrf_token }}'
+                        },
+                        success: function(){
+                            console.log("success");
+                            let s = url.split('active')[0];
+                            window.location.href= s;
+                        }
+                })
+            })
+        })
+        </script>
     {% endblock %}
 </body>
 </html>

@@ -6,9 +6,35 @@
 body {
     font-size: 14px;
     -webkit-font-smoothing: antialiased;
-    background: #E4E4E4;
+    background: #ffffff;
 }
 
+.search-place {
+  position: relative;
+  color: #aaa;
+  font-size: 20px;
+  margin-left: 10px;
+}
+
+.search-place input {
+  text-indent: 32px;
+  width: 300px;
+  height: 70px;
+  border: 0;
+    outline: 0;
+    background-color: #fff
+}
+
+.search-place .fa-search {
+  position: absolute;
+  top: 25px;
+  left: 10px;
+
+}
+
+.preview {
+    padding: 0;
+}
 /*::selection {*/
     /*color: #fff;*/
     /*background: #CC4646;*/
@@ -895,11 +921,11 @@ body {
 .pageSection {
     min-height: 600px;
     padding: 20px;
-    background: #dddddd;
+    background: #FFFFFF;
 }
 
     .pageSection:nth-child(odd) {
-        background: #eeeeee;
+        background: #FFFFFF;
     }
 
 .socialIcons li {

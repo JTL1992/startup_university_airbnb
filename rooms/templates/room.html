@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load bootstrap %}
+<head>
+    <meta charset="UTF-8">
+    {% block title %}
+        <title>{{ room.namedescription.room_name }}</title>
+    {% endblock %}
+    {% block css %}
+        <link rel="stylesheet" href="{% static 'css/room_style.css' %}">
+    {% endblock %}
+</head>
+<body>
+    {% block content %}
+        <!--carousel-->
+        <div class="row">
+            <div class="col-lg-12">
+                <div id="my-carousel" class="carousel slide" data-ride="carousel">
+                    <ol class="carousel-indicators">
+                        {% if room.photo.images_1 %}
+                            <li data-target="#my-carousel" data-slide-to="0" class="active"></li>
+                        {% endif %}
+                        {% if room.photo.images_2 %}
+                            <li data-target="#my-carousel" data-slide-to="1" class="active"></li>
+                        {% endif %}
+                        {% if room.photo.images_3 %}
+                            <li data-target="#my-carousel" data-slide-to="2" class="active"></li>
+                        {% endif %}
+                        {% if room.photo.images_4 %}
+                            <li data-target="#my-carousel" data-slide-to="3" class="active"></li>
+                        {% endif %}
+                    </ol>
+                    <div class="carousel-inner" role="listbox">
+                        {% if room.photo.images_1 %}
+                            <div class="item active">
+                                <img src="{{ room.photo.images_1 }}" alt="First slide"
+                                     style="height:450px; width: 100%">
+                            </div>
+                        {% endif %}
+                        {% if room.photo.images_2 %}
+                            <div class="item">
+                                <img src="{{ room.photo.images_2 }}" alt="First slide"
+                                     style="height:450px; width: 100%">
+                            </div>
+                        {% endif %}
+                        {% if room.photo.images_3 %}
+                            <div class="item">
+                                <img src="{{ room.photo.images_3 }}" alt="First slide"
+                                     style="height:450px; width: 100%">
+                            </div>
+                        {% endif %}
+                        {% if room.photo.images_4 %}
+                            <div class="item">
+                                <img src="{{ room.photo.images_4 }}" alt="First slide"
+                                     style="height:450px; width: 100%">
+                            </div>
+                        {% endif %}
+                    </div>
+                    <a class="left carousel-control" href="#my-carousel" role="button" data-slide="prev">
+                        <span class="icon-prev" aria-hidden="true"></span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="right carousel-control" href="#my-carousel" role="button" data-slide="next">
+                        <span class="icon-next" aria-hidden="true"></span>
+                        <span class="sr-only">Next</span>
+                    </a>
+                </div>
+{#                <img class="img-responsive" src="{{ room.photo.images_1 }}" alt="" style="height:450px; width: 100%">#}
+            </div>
+        </div>
+        <!--Main Info-->
+        <div class="row">
+            <div class="col-md-8">
+                <div class="row">
+                    <div class="col-md-4" style="text-align: right">
+                        <img class="img-circle" style="margin-top: 30px;" src="{{ room.owner.userprofile.image_url }}" alt="" width="100" height="100"><br>
+                        <h5 style="margin-right: 12%">{{ room.owner.username }}</h5>
+                    </div>
+                    <div class="col-md-8">
+                        <div style="margin-left: 8%; margin-top: 30px">
+                            <h2>{{ room.namedescription.room_name }}</h2>
+                            <p>{{ room.location.locality }}, {{ room.location.administrative_area_level_1 }}, {{ room.location.country }}</p>
+                        </div>
+                        <div class="row text-center row-space-1">
+                            <div class="col-sm-3">
+                                <i class="fa fa-home fa-2x"></i>
+                            </div>
+                             <div class="col-sm-3">
+                                <i class="fa fa-users fa-2x"></i>
+                            </div>
+                             <div class="col-sm-3">
+                                <i class="fa fa-bed fa-2x"></i>
+                            </div>
+                             <div class="col-sm-3">
+                                <i class="fa fa-ship fa-2x"></i>
+                            </div>
+                        </div>
+
+                        <div class="row text-center">
+                            <div class="col-sm-3">
+                                {{ room.hometype.home_type }}
+                            </div>
+                            <div class="col-sm-3">
+                                {{ room.bedroom.num_guest }} Guest{{ room.bedroom.num_guest|pluralize }}
+                            </div>
+                            <div class="col-sm-3">
+                                {{ room.bedroom.num_bed }} Bed{{ room.bedroom.num_bed|pluralize }}
+                            </div>
+                            <div class="col-sm-3">
+                                {{ room.bathroom.num_bathroom }} Bathroom{{ room.bathroom.num_bathroom |pluralize}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                 <hr style="margin-left: 10%">
+            </div>
+            <div class="col-md-4">
+            </div>
+        </div>
+        <!--information-->
+        <div class="row" style="margin-left: 10%">
+            <div class="col-md-8">
+                <h3>Information about this listing</h3>
+                <p class="content-color">{{ room.highlight.close_to }}, {{ room.highlight.love_for }}</p>
+                <hr>
+            </div>
+            <div class="col-md-4"></div>
+        </div>
+        <!--place-->
+         <div class="row" style="margin-left: 10%">
+            <div class="col-md-8">
+                <div class="row">
+                    <div class="col-sm-3">
+                        <h4>The space</h4>
+                    </div>
+                    <div class="col-sm-4">
+                        <div>
+                            <div class="content-color" style="display: inline-block">Accommodates:</div>
+                            <div class="num-color" style="display: inline-block">{{ room.accommodate }}</div>
+                        </div>
+                        <div>
+                            <div class="content-color" style="display: inline-block">Bathrooms:</div>
+                            <div class="num-color" style="display: inline-block">{{ room.bathroom.num_bathroom }}</div>
+                        </div>
+                        <div>
+                            <div class="content-color" style="display: inline-block">Bed type:</div>
+                            <div class="num-color" style="display: inline-block">{{ room.bedroom.bed_type }}</div>
+                        </div>
+                        <div>
+                            <div class="content-color" style="display: inline-block">Beds:</div>
+                            <div class="num-color" style="display: inline-block">{{ room.bedroom.num_bed }}</div>
+                        </div>
+                    </div>
+                    <div class="col-sm-5">
+                        <div>
+                            <div class="content-color" style="display: inline-block">Property type:</div>
+                            <div class="num-color" style="display: inline-block">{{ room.hometype.home_type }}</div>
+                        </div>
+                        <div>
+                            <div class="content-color" style="display: inline-block">Room Type:</div>
+                            <div class="num-color" style="display: inline-block">{{ room.hometype.room_type }}</div>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+            </div>
+            <div class="col-md-4"></div>
+        </div>
+        <!--Amenities-->
+         <div class="row" style="margin-left: 10%">
+            <div class="col-md-8">
+                <div class="row">
+                    <div class="col-sm-3">
+                        <h4>Amenities</h4>
+                    </div>
+                    <div class="col-sm-4">
+                        {% if room.amenity.is_essential %}
+                            <div class="content-color"><i class="fa fa-plug"></i> Essentials</div>
+                        {% endif %}
+                        {% if room.amenity.is_wifi %}
+                            <div class="content-color"><i class="fa fa-wifi"></i> WiFi</div>
+                        {% endif %}
+                        {% if room.amenity.is_drawer %}
+                            <div class="content-color"><i class="fa fa-table"></i> Drawer</div>
+                        {% endif %}
+                        {% if room.amenity.is_heat %}
+                            <div class="content-color"><i class="fa fa-fire"></i> Heat</div>
+                        {% endif %}
+                        {% if room.amenity.is_air %}
+                            <div class="content-color"><i class="fa fa-ge"></i> Air conditioning</div>
+                        {% endif %}
+                    </div>
+                    <div class="col-sm-5">
+                       {% if room.amenity.is_breakfast %}
+                            <div class="content-color"><i class="fa fa-coffee"></i> Breakfast tea coffee</div>
+                        {% endif %}
+                        {% if room.amenity.is_desk %}
+                            <div class="content-color"><i class="fa fa-desktop"></i> Desk/workspace</div>
+                        {% endif %}
+                        {% if room.amenity.is_fireplace %}
+                            <div class="content-color"><i class="fa fa-fire"></i> Fireplace</div>
+                        {% endif %}
+                        {% if room.amenity.is_iron %}
+                            <div class="content-color"><i class="fa fa-tty"></i> Iron</div>
+                        {% endif %}
+                        {% if room.amenity.is_hairdryer %}
+                            <div class="content-color"><i class="fa fa-umbrella"></i> Hair dryer</div>
+                        {% endif %}
+                    </div>
+                </div>
+                <hr>
+            </div>
+            <div class="col-md-4"></div>
+        </div>
+        <!--description-->
+         <div class="row" style="margin-left: 10%">
+            <div class="col-md-8">
+                <div class="row">
+                    <div class="col-sm-3">
+                        <h4>Description</h4>
+                    </div>
+                    <div class="col-sm-9">
+                        <p class="content-color">{{ room.namedescription.room_description }}</p>
+                    </div>
+                </div>
+                <hr>
+            </div>
+            <div class="col-md-4"></div>
+        </div>
+        <!--map-->
+         <div class="row" style="margin-left: 10%">
+            <div class="col-md-12 text-center">
+                <div id="map" style="width: 80%; height: 450px"></div>
+            </div>
+         </div>
+        <div class="row" style="margin-left: 10%">
+            <div class="col-md-12">
+                <h4 class="content-color">Near by</h4>
+            </div>
+        </div>
+        <!--nearby-->
+         <div class="row" style="margin-left: 10%">
+            {% for room_near in room_nearby  %}
+                <div class="col-md-3">
+                    <div class="panel panel-default">
+                        <div class="panel-heading preview">
+                            <img src="{{ room_near.room.photo.images_1 }}" alt="" style="width: 100%; height: 150px">
+                        </div>
+                        <div class="panel-body">
+                            <a href="{% url 'room_view' room_near.room.id %}">{{ room_near.room.namedescription.room_name }}</a>
+                            <p>{{ room_near.route }}, {{ room_near.street_number }}, {{ room_nearby.locality }}, {{ room_near.country }}</p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+         </div>
+    {% endblock %}
+    {% block js %}
+        <script type="text/javascript">
+            function myMap() {
+                var geo = {{ geo|safe }};
+                var center = new google.maps.LatLng(geo['lat'],geo['lng']);
+                var mapCanvas = document.getElementById("map");
+                var mapOptions = {
+                    center: center,
+                    zoom: 16,
+                    scrollwheel: false,
+                };
+                var map = new google.maps.Map(mapCanvas, mapOptions);
+                var marker = new google.maps.Marker({
+                    position: center
+                });
+                marker.setMap(map);
+                var circle = new google.maps.Circle({
+                    center: center,
+                    radius: 100,
+                    strokeColor: "#FCF817",
+                    strokeOpacity: 0.6,
+                    strokeWeight: 2,
+                    fillColor: "#FCF817",
+                    fillOpacity: 0.3
+                });
+                circle.setMap(map)
+            }
+        </script>
+        <script src="https://maps.googleapis.com/maps/api/js?callback=myMap&amp;key=AIzaSyCueh7NkqVaoXCd6EjOh7s5v3WuBEhy3_M&amp;language=en"></script>
+    {% endblock %}
+</body>
+</html>

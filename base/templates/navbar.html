@@ -1,6 +1,10 @@
 {% load socialaccount %}
 {% load gravatar %}
 {% load bootstrap %}
+{% load staticfiles %}
+<head>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
 <header class="header">
     <div class="container">
         <nav class="navbar navbar-default navbar-static-top " role="navigation">
@@ -12,11 +16,22 @@
                     <span class="icon-bar"></span>
                 </button>
                 <a href="/" class="navbar-brand logo"><b>Airbnb</b></a>
+                <ul class="nav navbar-nav navbar-left">
+                    <li>
+                        <div class="search-place">
+                            <span class="fa fa-search"></span>
+                            <input type="text"  placeholder="where to go?">
+                        </div>
+                    </li>
+                </ul>
             </div>
             <!--/.navbar-header-->
             <div id="main-nav" class="collapse navbar-collapse">
                 <ul class="nav navbar-nav navbar-right">
                 {% if user.is_authenticated %}
+                    <li style="margin-top: 3px">
+                        <a href="#"> Message <span class="glyphicon glyphicon-envelope"></span></a>
+                    </li>
                     <li class="" style="margin-top:3px">
                         {% if user.room_set.all.count %}
                             <a href="{% url 'rooms_list' %}"> Host <span class="glyphicon glyphicon-home"></span></a>

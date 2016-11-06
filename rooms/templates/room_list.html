@@ -2,22 +2,64 @@
 <html lang="en">
 {% extends 'base.html' %}
 {% load bootstrap %}
+{% load staticfiles %}
 <head>
     <meta charset="UTF-8">
     {% block title %}
         <title>room list</title>
     {% endblock %}
+    {% block css %}
+        <link rel="stylesheet" href="{% static 'css/room_style.css' %}">
+    {% endblock %}
 </head>
 <body>
     {% block content %}
-        {% if rooms %}
-            <ul>
-            {% for room in rooms %}
-                <li><a href="{% url 'room_section' room.id %}"> {{ room.room_type }} in {{ room.city_country }}</a></li>
-            {% endfor %}
-            </ul>
-        {% else %}
-        {% endif %}
+        <div style="padding-top: 20px"></div>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <ul class="sidebar-list">
+                        <li class="sidebar-item">
+                            <a class="sidebar-link active" href="{% url 'rooms_list' %}">Your Listing</a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="#">Your Reservations</a>
+                        </li>
+                    </ul>
+                    <a href="{% url 'become_a_host' %}" class="btn btn-success" style="width: 150px">Add a listing</a>
+                </div>
+                <div class="col-md-8">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3>Listing</h3>
+                        </div>
+                        <div class="panel-body">
+                            {% if rooms %}
+                            {% for room in rooms %}
+                                <div class="room-list">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <img src="{{ room.photo.images_1 }}" alt="" style="height:150px; width: 100%">
+                                        </div>
+                                        <div class="col-md-6 text-center" style="margin-top: 50px">
+                                            {% if room.location %}
+                                            <li><a href="{% url 'room_view' room.id %}"> {{ room.room_type }} in {{ room.city_country }}</a></li>
+                                            {% else %}
+                                             <li><p> {{ room.room_type }} in {{ room.city_country }}</p></li>
+                                            {% endif %}
+                                            <li><a href="{% url 'room_section' room.id %}" class="btn btn-danger "> Update </a></li>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                    {% else %}
+                    {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     {% endblock %}
 </body>
 </html>

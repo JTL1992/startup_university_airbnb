@@ -1,13 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
  {% extends 'base.html' %}
+ {% load staticfiles %}
 <head>
     <meta charset="UTF-8">
+    {% block title %}
     <title>Home airbnb</title>
+    {% endblock %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+{% endblock %}
 </head>
 <body>
 {% block content %}
-    <h1>Home Page</h1>
+    <div style="margin-top: 5%"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <input type="text" class="form-control" placeholder="Where to go?">
+            </div>
+            <div class="col-md-2">
+                <input type="text" class="form-control" placeholder="Start Date">
+            </div>
+            <div class="col-md-2">
+                <input type="text" class="form-control" placeholder="End Date">
+            </div>
+            <div class="col-md-2">
+                <button class="btn btn-primary" style="width: 150px"> Search </button>
+            </div>
+
+        </div>
+        <div class="row" style="margin-top: 3%">
+            {% for room in rooms  %}
+                <div class="col-md-4">
+                    <div class="panel panel-default">
+                        <div class="panel-heading preview">
+                            <img src="{{ room.photo.images_1 }}" alt="" style="width: 100%; height: 180px">
+                        </div>
+                        <div class="panel-body">
+                            <a href="{% url 'room_view' room.id %}">{{ room.namedescription.room_name }}</a>
+                            <p>{{ room.location.route }}, {{ room.location.street_number }}, {{ room.location.locality }}, {{ room.location.country }}</p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+         </div>
+    </div>
 {% endblock %}
 
 </body>

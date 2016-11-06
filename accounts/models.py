@@ -9,8 +9,8 @@ from django.utils.safestring import mark_safe
 
 
 class UserProfile(models.Model):
-    user = models.ForeignKey(User, verbose_name='username')
-    phone = models.IntegerField(verbose_name='phone number')
+    user = models.OneToOneField(User, verbose_name='username')
+    phone = models.CharField(max_length=20, blank=True, verbose_name='phone number')
     description = models.CharField(max_length=200)
     image_url = models.CharField(max_length=200, default='https://example.com/static/images/defaultavatar.jpg')
 

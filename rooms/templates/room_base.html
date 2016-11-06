@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+{% extends 'base.html' %}
+{% load bootstrap %}
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+    {% block content %}
+        <div style="padding: 0"></div>
+            <div class="panel panel-default">
+                <div class="panel-heading"><h3>{% block form_name %}{% endblock %}</h3></div>
+                <div class="panel-body">
+                    <form action="" method="post">{% csrf_token %}
+                    <div class="container">
+                        {% block form_content %}{% endblock %}
+                     </div>
+                    </form>
+                </div>
+            </div>
+        {% block room_content %}{% endblock %}
+    {% endblock %}
+    {% block js %}{% endblock %}
+</body>
+</html>

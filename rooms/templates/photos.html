@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+{% extends 'room_base.html' %}
+<head>
+    <meta charset="UTF-8">
+    {% block title %}
+    <title>Add photos</title>
+        {{ form.media }}
+    {% endblock %}
+</head>
+<body>
+{% block form_name %}Show travelers what your space looks like{% endblock %}
+{% block form_content %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="image-preview-single text-center">
+                <li><img id="images_1" src="" alt="" width="960" height="360" style="visibility: hidden"></li>
+                <li>{{ form.images_1 }}</li>
+            </div>
+        </div>
+    </div>
+    <div class="row" style="margin-top: 40px">
+        <div id="images_2_div" class="col-md-4" style="visibility: hidden">
+            <div class="image-preview-single text-center">
+                <li><img id="images_2" src="" alt="" width="320" height="180" style="visibility: hidden;"></li>
+                <li>{{ form.images_2 }}</li>
+            </div>
+        </div>
+        <div id="images_3_div" class="col-md-4" style="visibility: hidden">
+            <div class="image-preview-single text-center">
+                <li><img id="images_3" src="" alt="" width="320" height="180" style="visibility: hidden;"></li>
+                <li>{{ form.images_3 }}</li>
+            </div>
+        </div>
+        <div id="images_4_div" class="col-md-4" style="visibility: hidden">
+            <div class="image-preview-single text-center">
+                <li><img id="images_4" src="" alt="" width="320" height="180" style="visibility: hidden;"></li>
+                <li>{{ form.images_4 }}</li>
+            </div>
+        </div>
+    </div>
+    <div style="margin: 40px">
+        <a href="{% url 'room_section' room_id %}" class="btn btn-default"> Back </a>
+        <input type="submit" class="btn btn-primary" value="Next">
+    </div>
+{% endblock %}
+    {% block js %}
+        <script type="text/javascript">
+        UPLOADCARE_PUBLIC_KEY = 'e306d80d07c6894aa087';
+        function installWidgetPreviewSingle(widget, img) {
+            widget.onChange(function(file) {
+                img.css('visibility', 'hidden');
+                img.attr('src', '');
+                if (file) {
+                    file.done(function(fileInfo) {
+                        var size = '' + (img.width() * 2) + 'x' + (img.height() * 2);
+                        var previewUrl = fileInfo.cdnUrl + '-/scale_crop/' + size + '/center/';
+                        img.attr('src', previewUrl);
+                        img.css('visibility', 'visible');
+                        var id = img.attr('id');
+                        console.log(id);
+                        var num = parseInt(id.split('_')[1])+1;
+                        id = id.split('_')[0];
+                        var new_id = id+"_"+num+"_div";
+                        console.log(new_id);
+                        $('#'+new_id).css('visibility', 'visible')
+                    });
+                }else{
+                    var id = img.attr('id');
+                    console.log(id);
+                    var num = parseInt(id.split('_')[1])+1;
+                    id = id.split('_')[0];
+                    var new_id = id+"_"+num+"_div";
+                    console.log(new_id);
+                    $('#'+new_id).css('visibility', 'hidden')
+                }
+            });
+        }
+        $(function() {
+            $('.image-preview-single').each(function() {
+                installWidgetPreviewSingle(
+                uploadcare.SingleWidget($(this).children('li').children('input')),
+                $(this).children('li').children('img')
+                );
+            });
+        });
+        </script>
+
+    {% endblock %}
+</body>
+</html>

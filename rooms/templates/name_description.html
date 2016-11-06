@@ -5,11 +5,11 @@
 <head>
     <meta charset="UTF-8">
     {% block title %}
-    <title>Edit spaces</title>
+    <title>Edit Name and Description</title>
     {% endblock %}
 </head>
 <body>
-{% block form_name %}What spaces can guests use?{% endblock %}
+{% block form_name %}Edit your name and description{% endblock %}
 {% block form_content %}
     <div class="row">
         <div class="col-md-4">
@@ -19,7 +19,7 @@
         </div>
     </div>
     <div class="">
-        <a href="{% url 'amenities' room_id %}" class="btn btn-default"> Back </a>
+        <a href="{% url 'highlights' room_id %}" class="btn btn-default"> Back </a>
         <input type="submit" class="btn btn-primary" value="Finish">
     </div>
 {% endblock %}

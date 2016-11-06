@@ -1,3 +1,5 @@
+import json
+
 import geocoder
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -10,7 +12,8 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 
 from base.helper import convert_message_to_toastr
-from rooms.models import Location, Amenity, AmenityForm, SpaceShare, SpaceShareForm
+from rooms.models import Location, Amenity, AmenityForm, SpaceShare, SpaceShareForm, Photo, PhotoForm, HighLight, \
+    HighLightForm, NameDescription, NameDescriptionForm, Calender, CalenderForm, Price, PriceForm
 from rooms.models import RoomForm, HomeTypeForm, Room, BedroomForm, HomeType, Bedroom, BathroomForm, Bathroom, \
     LocationForm
 
@@ -31,6 +34,7 @@ def become_a_host(request):
     return render_to_response('room_create.html', {'form': form}, RequestContext(request))
 
 
+@login_required()
 def room_list(request):
     user = request.user
     if user.room_set.all().count():
@@ -40,16 +44,37 @@ def room_list(request):
     return render_to_response('room_list.html', {'rooms': user_rooms}, RequestContext(request))
 
 
+@login_required()
 def room_section(request, room_id):
-    model_list = ('hometype', 'bedroom', 'bathroom', 'location', 'amenity', 'spaceshare')
-    page_list = ('home_type', 'bedrooms', 'bathrooms', 'location', 'amenities', 'spaces')
+    model_list = ('hometype', 'bedroom', 'bathroom', 'location', 'amenity', 'spaceshare',
+                  'photo', 'highlight', 'namedescription', 'calender', 'price')
+    page_list = ('home_type', 'bedrooms', 'bathrooms', 'location', 'amenities', 'spaces',
+                 'photos', 'highlights', 'name_description', 'calenders', 'price')
     room = Room.objects.get(id=room_id)
-    url = 'home_type'
+    page_url = ['home_type', 'photos', 'calenders']
+    button = ['Change', None, None, None]
     for index, section in enumerate(model_list):
         if not hasattr(room, section):
-            url = page_list[index]
+            if index < 5:
+                button[0] = 'Continue'
+                page_url[0] = page_list[index]
+            elif 5 <= index < 8:
+                button[1] = 'Continue'
+                page_url[1] = page_list[index]
+            else:
+                button[1] = 'Change'
+                button[2] = 'Continue'
+                page_url[2] = page_list[index]
             break
-    return render_to_response('room_section.html', {'url': url}, RequestContext(request))
+        else:
+            if index == 10:
+                button = ['Change', 'Change', 'Change', None]
+                if room.is_active:
+                    button[3] = 'Deactive'
+                else:
+                    button[3] = 'Active'
+
+    return render_to_response('room_section.html', {'page_url': page_url, 'button': button, 'room_id': room_id}, RequestContext(request))
 
 
 def home_type_view(request, room_id):
@@ -207,3 +232,117 @@ def spaces(request, room_id):
     else:
         form = SpaceShareForm(instance=space)
     return render_to_response('space.html', {'form': form, 'room_id': room_id, 'messages': message}, RequestContext(request))
+
+
+def photos(request, room_id):
+    message = convert_message_to_toastr(messages.get_messages(request))
+    room = Room.objects.get(id=room_id)
+    try:
+        photo = room.photo
+    except Photo.DoesNotExist:
+        photo = Photo(room=room)
+    if request.method == 'POST':
+        form = PhotoForm(request.POST, request.FILES, instance=photo)
+        if form.is_valid():
+            form.save()
+            messages.add_message(request, messages.SUCCESS, 'edit your photos successfully!')
+            return HttpResponseRedirect(reverse('highlights', kwargs={'room_id': room_id}))
+    else:
+        form = PhotoForm(instance=photo)
+    return render_to_response('photos.html', {'form': form, 'room_id': room_id, 'messages': message}, RequestContext(request))
+
+
+def highlights(request, room_id):
+    message = convert_message_to_toastr(messages.get_messages(request))
+    room = Room.objects.get(id=room_id)
+    try:
+        high = room.highlight
+    except HighLight.DoesNotExist:
+        high = HighLight(room=room)
+    if request.method == 'POST':
+        form = HighLightForm(request.POST, instance=high)
+        if form.is_valid():
+            form.save()
+            messages.add_message(request, messages.SUCCESS, 'edit your highlights successfully!')
+            return HttpResponseRedirect(reverse('name_description', kwargs={'room_id': room_id}))
+    else:
+        form = HighLightForm(instance=high)
+    return render_to_response('highlight.html', {'form': form, 'room_id': room_id, 'messages': message}, RequestContext(request))
+
+
+def name_description(request, room_id):
+    message = convert_message_to_toastr(messages.get_messages(request))
+    room = Room.objects.get(id=room_id)
+    try:
+        name = room.namedescription
+    except NameDescription.DoesNotExist:
+        name = NameDescription(room=room)
+    if request.method == 'POST':
+        form = NameDescriptionForm(request.POST, instance=name)
+        if form.is_valid():
+            form.save()
+            messages.add_message(request, messages.SUCCESS, 'edit your name and description successfully!')
+            return HttpResponseRedirect(reverse('room_section', kwargs={'room_id': room_id}))
+    else:
+        form = NameDescriptionForm(instance=name)
+    return render_to_response('name_description.html', {'form': form, 'room_id': room_id, 'messages': message}, RequestContext(request))
+
+
+def calenders(request, room_id):
+    message = convert_message_to_toastr(messages.get_messages(request))
+    room = Room.objects.get(id=room_id)
+    try:
+        calender = room.calender
+    except Calender.DoesNotExist:
+        calender = Calender(room=room)
+    if request.method == 'POST':
+        form = CalenderForm(request.POST, instance=calender)
+        if form.is_valid():
+            form.save()
+            messages.add_message(request, messages.SUCCESS, 'edit your calender successfully!')
+            return HttpResponseRedirect(reverse('price', kwargs={'room_id': room_id}))
+    else:
+        form = CalenderForm(instance=calender)
+    return render_to_response('calender.html', {'form': form, 'room_id': room_id, 'messages': message}, RequestContext(request))
+
+
+def price(request, room_id):
+    message = convert_message_to_toastr(messages.get_messages(request))
+    room = Room.objects.get(id=room_id)
+    try:
+        p = room.price
+    except Price.DoesNotExist:
+        p = Price(room=room)
+    if request.method == 'POST':
+        form = PriceForm(request.POST, instance=p)
+        if form.is_valid():
+            form.save()
+            messages.add_message(request, messages.SUCCESS, 'edit your calender successfully!')
+            return HttpResponseRedirect(reverse('room_section', kwargs={'room_id': room_id}))
+    else:
+        form = PriceForm(instance=p)
+    return render_to_response('price.html', {'form': form, 'room_id': room_id, 'messages': message}, RequestContext(request))
+
+
+@login_required()
+def rooms(request, room_id):
+    room = Room.objects.get(id=room_id)
+    zip = room.location.postal_code
+    geo = {
+        'lat': room.location.lat,
+        'lng': room.location.lng
+    }
+    room_nearby = Location.objects.filter(postal_code__exact=zip)
+    return render_to_response('room.html', {'room': room, 'geo': json.dumps(geo), 'room_nearby': room_nearby}, RequestContext(request))
+
+
+def active(request, room_id):
+    room = Room.objects.get(id=room_id)
+    if request.is_ajax():
+        if request.method == 'POST':
+            if request.POST['active'] == 'Active':
+                room.is_active = True
+            else:
+                room.is_active = False
+            room.save()
+        return JsonResponse({'ok': 200})

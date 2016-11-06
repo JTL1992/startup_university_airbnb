@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+{% extends 'room_base.html' %}
+{% load bootstrap %}
+{% load staticfiles %}
+<head>
+    <meta charset="UTF-8">
+    {% block title %}
+    <title>Edit Calender</title>
+    {% endblock %}
+    {% block css %}
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
+    {% endblock %}
+</head>
+<body>
+{% block form_name %}Edit your calender{% endblock %}
+{% block form_content %}
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                {{ form.date_range|bootstrap }}
+            </div>
+        </div>
+    </div>
+    <div class="">
+        <a href="{% url 'room_section' room_id %}" class="btn btn-default"> Back </a>
+        <input type="submit" class="btn btn-primary" value="Next">
+    </div>
+{% endblock %}
+    {% block js %}
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
+        <script type="text/javascript">
+            $(function() {
+                $('#id_date_range').daterangepicker();
+            });
+        </script>
+    {% endblock %}
+</body>
+</html>

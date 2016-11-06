@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-{% extends 'base.html' %}
+{% extends 'room_base.html' %}
 {% load bootstrap %}
 <head>
     <meta charset="UTF-8">
@@ -9,28 +9,19 @@
     {% endblock %}
 </head>
 <body>
-    {% block content %}
-        <div class="panel panel-default">
-            <div class="panel-heading"><h3></h3></div>
-            <div class="panel-body">
-                <form action="" method="post">{% csrf_token %}
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <h3>How many bathrooms?</h3>
-                                    {{ form.num_bathroom|bootstrap }}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="">
-                            <a href="{% url 'bedrooms' room_id %}" class="btn btn-default" > Back </a>
-                            <input type="submit" class="btn btn-primary" value="Next">
-                        </div>
-                    </div>
-                </form>
+{% block form_name %}How many bathrooms?{% endblock %}
+{% block form_content %}
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                {{ form.num_bathroom|bootstrap }}
             </div>
         </div>
-    {% endblock %}
+    </div>
+    <div class="">
+        <a href="{% url 'bedrooms' room_id %}" class="btn btn-default"> Back </a>
+        <input type="submit" class="btn btn-primary" value="Next">
+    </div>
+{% endblock %}
 </body>
 </html>

@@ -19,7 +19,6 @@ project_app = (
     'base',
     'rooms',
     'airbnb',
-    'location'
     )
 
 # Quick-start development settings - unsuitable for production
@@ -54,6 +53,7 @@ INSTALLED_APPS = (
     'allauth.socialaccount.providers.google',
     'django_gravatar',
     'crispy_forms',
+    'pyuploadcare.dj',
 )+project_app
 
 SITE_ID = 1
@@ -259,3 +259,12 @@ STATICFILES_DIRS = (
 ) + project_static
 
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+MEDIA_URL = '/media/'
+
+UPLOADCARE = {
+    'pub_key': 'e306d80d07c6894aa087',
+    'secret': '72d4808f5ca0366560c9',
+}

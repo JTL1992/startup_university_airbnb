@@ -30,7 +30,7 @@
                                  {% if user.email %}
                                      <li>Email Address</li>
                                  {% endif %}
-                                 {% if profile.phone %}
+                                 {% if user.userprofile.phone %}
                                      <li>Phone Number</li>
                                  {% endif %}
                              </div>
@@ -39,7 +39,7 @@
                 </div>
                 <div class="col-lg-8 ">
                     <h1>{{ user.username }}</h1>
-                    <p>{{ profile.description }}</p>
+                    <p>{{ user.userprofile.description }}</p>
                 </div>
             </div>
 

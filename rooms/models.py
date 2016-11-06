@@ -1,7 +1,10 @@
 # coding=utf-8
+import geocoder
 from django.contrib.auth.models import User
 from django.db import models
 from django import forms
+from pyuploadcare.dj.forms import FileWidget
+from pyuploadcare.dj.models import ImageField
 
 ROOM_TYPE_CHOICES = (
     ('Entire place', 'Entire place'),
@@ -127,6 +130,23 @@ class LocationForm(forms.ModelForm):
         Fields = '_all_'
         exclude = ['room', 'formatted_address', 'lat', 'lng']
 
+    # def clean(self):
+    #     cleaned_data = super(LocationForm, self).clean()
+    #     route = cleaned_data.cleaned_data['route']
+    #     street_number = cleaned_data.cleaned_data['street_number']
+    #     locality = cleaned_data.cleaned_data['locality']
+    #     country = cleaned_data.cleaned_data['country']
+    #     postal_code = cleaned_data.cleaned_data['postal_code']
+    #
+    #     input_address = '%s %s, %s, %s' % (route, street_number, locality, country)
+    #     g = geocoder.google(input_address)
+    #
+    #     if g.ok and g.postal == postal_code:
+    #         raise forms.ValidationError(
+    #             "something wrong with your location"
+    #             "we can't find your location."
+    #         )
+
 
 class Amenity(models.Model):
     room = models.OneToOneField(Room)
@@ -173,3 +193,121 @@ class SpaceShareForm(forms.ModelForm):
         model = SpaceShare
         Fields = '_all_'
         exclude = ['room']
+
+
+class Photo(models.Model):
+    room = models.OneToOneField(Room)
+    images_1 = ImageField(blank=True)
+    images_2 = ImageField(blank=True)
+    images_3 = ImageField(blank=True)
+    images_4 = ImageField(blank=True)
+
+    def __unicode__(self):
+        return self.room.owner.username
+
+
+class PhotoForm(forms.ModelForm):
+    class Meta:
+        model = Photo
+        Fields = '_all_'
+        exclude = ['room']
+        widgets = {
+            'images_1': FileWidget(attrs={
+                'data-cdn-base': 'https://ucarecdn.com',
+                'data-image-shrink': '1024x1024',
+                'data-crop': '16:9',
+                'data-clearable': '',
+            }),
+            'images_2': FileWidget(attrs={
+                'data-cdn-base': 'https://ucarecdn.com',
+                'data-image-shrink': '1024x1024',
+                'data-crop': '16:9',
+                'data-clearable': '',
+            }),
+            'images_3': FileWidget(attrs={
+                'data-cdn-base': 'https://ucarecdn.com',
+                'data-image-shrink': '1024x1024',
+                'data-crop': '16:9',
+                'data-clearable': '',
+            }),
+            'images_4': FileWidget(attrs={
+                'data-cdn-base': 'https://ucarecdn.com',
+                'data-image-shrink': '1024x1024',
+                'data-crop': '16:9',
+                'data-clearable': '',
+            })
+        }
+
+
+class HighLight(models.Model):
+    room = models.OneToOneField(Room)
+    close_to = models.CharField(max_length=100, verbose_name='')
+    love_for = models.CharField(max_length=100, verbose_name='')
+    for_couples = models.BooleanField(verbose_name='Couples')
+    for_adventurers = models.BooleanField(verbose_name='Solo adventurers')
+    for_business = models.BooleanField(verbose_name='Business travelers')
+    for_families = models.BooleanField(verbose_name='Families(with kids)')
+    for_groups = models.BooleanField(verbose_name='Big groups')
+    for_furry = models.BooleanField(verbose_name='Furry friends(pets)')
+
+    def __unicode__(self):
+        return self.room.owner.username
+
+
+class HighLightForm(forms.ModelForm):
+    class Meta:
+        model = HighLight
+        Fields = '_all_'
+        exclude = ['room']
+        widgets = {
+            'close_to': forms.TextInput(attrs={'placeholder': 'My place is close to'}),
+            'love_for': forms.TextInput(attrs={'placeholder': 'You will love my place for'}),
+        }
+
+
+class NameDescription(models.Model):
+    room = models.OneToOneField(Room)
+    room_name = models.CharField(max_length=50, verbose_name='Edit your room name')
+    room_description = models.CharField(max_length=200, verbose_name='Edit your description')
+
+    def __unicode__(self):
+        return self.room.owner.username
+
+
+class NameDescriptionForm(forms.ModelForm):
+    class Meta:
+        model = NameDescription
+        Fields = '_all_'
+        exclude = ['room']
+        widgets = {
+            'room_description': forms.Textarea(attrs={'row': 5})
+        }
+
+
+class Calender(models.Model):
+    room = models.OneToOneField(Room)
+    date_range = models.CharField(max_length=25, verbose_name='select date range ')
+
+    def __unicode__(self):
+        return self.room.owner.username
+
+
+class CalenderForm(forms.ModelForm):
+    class Meta:
+        model = Calender
+        Fields = '_all_'
+        exclude = ['room']
+
+
+class Price(models.Model):
+    room = models.OneToOneField(Room)
+    price = models.IntegerField(verbose_name='Nightly price')
+
+    def __unicode__(self):
+        return self.room.owner.username
+
+
+class PriceForm(forms.ModelForm):
+    class Meta:
+        model = Price
+        fields = ['price']

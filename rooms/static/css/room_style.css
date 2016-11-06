@@ -1,0 +1,47 @@
+.room-list{
+    padding: 15px 15px;
+    margin-bottom: 20px;
+    color: #82888a;
+    font-size: 20px;
+    background-color: #eee;
+}
+.photo-full-width{
+    padding: 0 !important;
+}
+
+.sidebar-list {
+    padding-left: 0;
+    list-style: none;
+}
+
+.content-color {
+    color: #82888a;
+    font-size: 20px;
+    margin: 20px 0;
+}
+.num-color {
+    color: #000000;
+    font-size: 20px;
+}
+.sidebar-item {
+    padding: 10px 0;
+    font-size: 18px;
+    color: #52585a;
+    border-bottom: 1px solid #ccc;
+}
+
+.sidebar-link {
+    color: #82888a;
+    text-decoration: none;
+}
+
+.sidebar-link:hover, .sidebar-link:focus {
+    color: #cacccd;
+    text-decoration: none;
+}
+
+.active.sidebar-link {
+    color: #565a5c;
+    font-weight: bold;
+    text-decoration: none;
+}

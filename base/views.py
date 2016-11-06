@@ -6,13 +6,14 @@ import logging
 import json
 from helper import convert_message_to_toastr, add_notification
 # Create your views here.
-from django.template import Context
+from django.template import Context, RequestContext
+
+from rooms.models import Room
 
 logger = logging.getLogger('base')
 
 
 def home(request):
-    g = geocoder.google([40.3888543, -3.7328683], method='reverse')
-    print(g.json)
     message = convert_message_to_toastr(messages.get_messages(request))
-    return render_to_response('home.html', {'user': request.user, 'messages': message})
+    rooms = Room.objects.all().filter(is_active=True)
+    return render_to_response('home.html', {'messages': message, 'rooms': rooms}, RequestContext(request))
