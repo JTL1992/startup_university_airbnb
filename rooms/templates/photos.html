@@ -14,7 +14,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="image-preview-single text-center">
-                <li><img id="images_1" src="" alt="" width="960" height="360" style="visibility: hidden"></li>
+                <li><img id="images_1" src="" alt="" width="960" height="540" style="visibility: hidden"></li>
                 <li>{{ form.images_1 }}</li>
             </div>
         </div>
@@ -53,7 +53,7 @@
                 img.attr('src', '');
                 if (file) {
                     file.done(function(fileInfo) {
-                        var size = '' + (img.width() * 2) + 'x' + (img.height() * 2);
+                        var size = '' + (img.width()) + 'x' + (img.height());
                         var previewUrl = fileInfo.cdnUrl + '-/scale_crop/' + size + '/center/';
                         img.attr('src', previewUrl);
                         img.css('visibility', 'visible');

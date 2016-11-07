@@ -53,6 +53,13 @@ class RoomForm(forms.ModelForm):
         fields = '__all__'
         exclude = ['owner', 'is_active', 'created_date']
 
+    def clean_city_country(self):
+        city_country_cleaned = self.cleaned_data['city_country']
+        num_words = len(city_country_cleaned.split(', '))
+        if num_words <= 1:
+            raise forms.ValidationError("Please input city, country with help of google!")
+        return city_country_cleaned
+
 
 class HomeType(models.Model):
     room = models.OneToOneField(Room)

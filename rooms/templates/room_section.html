@@ -49,7 +49,7 @@
             <div class="row">
                 <div class="col-md-4">
                    {% if button.3 %}
-                       <a id="active" href="#" class="btn btn-default">{{ button.3 }}</a>
+                       <button id="active" class="btn btn-danger" style="width: 150px;">{{ button.3 }}</button>
                    {% endif %}
                 </div>
             </div>
@@ -58,7 +58,7 @@
     {% block js %}
         <script type="text/javascript">
         $(function(){
-            let url = window.location.pathname;
+            var url = window.location.pathname;
             url = url.replace('section', 'active');
             $('#active').click(function(){
                 $.ajax({
@@ -70,7 +70,7 @@
                         },
                         success: function(){
                             console.log("success");
-                            let s = url.split('active')[0];
+                            var s = url.split('active')[0];
                             window.location.href= s;
                         }
                 })
