@@ -3,15 +3,18 @@ import json
 import geocoder
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.core import serializers
 from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect, JsonResponse
+from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 from django.shortcuts import render_to_response
+from django.forms.models import model_to_dict
 
 
 # Create your views here.
 from django.template import RequestContext
 
 from base.helper import convert_message_to_toastr
+from reservations.models import Reservation, ReservationForm
 from rooms.models import Location, Amenity, AmenityForm, SpaceShare, SpaceShareForm, Photo, PhotoForm, HighLight, \
     HighLightForm, NameDescription, NameDescriptionForm, Calender, CalenderForm, Price, PriceForm
 from rooms.models import RoomForm, HomeTypeForm, Room, BedroomForm, HomeType, Bedroom, BathroomForm, Bathroom, \
@@ -36,12 +39,13 @@ def become_a_host(request):
 
 @login_required()
 def room_list(request):
+    message = convert_message_to_toastr(messages.get_messages(request))
     user = request.user
     if user.room_set.all().count():
         user_rooms = user.room_set.all()
     else:
         user_rooms = None
-    return render_to_response('room_list.html', {'rooms': user_rooms}, RequestContext(request))
+    return render_to_response('room_list.html', {'rooms': user_rooms, 'messages': message}, RequestContext(request))
 
 
 @login_required()
@@ -179,7 +183,6 @@ def location_map(request, room_id):
             room = Room.objects.get(id=room_id)
             lat = room.location.lat
             lng = room.location.lng
-            print("get request")
             return JsonResponse({'latlng': [lat, lng]})
         elif request.method == 'POST':
             room = Room.objects.get(id=room_id)
@@ -192,8 +195,8 @@ def location_map(request, room_id):
                 if g.ok and g.postal == room.location.postal_code:
                     room.location.lat = lat
                     room.location.lng = lng
-                    room.location.route = g.street
-                    room.location.street_number = g.housenumber
+                    # room.location.route = g.street
+                    # room.location.street_number = g.housenumber
                     room.location.save()
             return JsonResponse({'ok': 200})
 
@@ -326,14 +329,33 @@ def price(request, room_id):
 
 @login_required()
 def rooms(request, room_id):
-    room = Room.objects.get(id=room_id)
-    zip = room.location.postal_code
-    geo = {
-        'lat': room.location.lat,
-        'lng': room.location.lng
-    }
-    room_nearby = Location.objects.filter(postal_code__exact=zip)
-    return render_to_response('room.html', {'room': room, 'geo': json.dumps(geo), 'room_nearby': room_nearby}, RequestContext(request))
+    message = convert_message_to_toastr(messages.get_messages(request))
+    if request.method == 'GET':
+        room = Room.objects.get(id=room_id)
+        zip = room.location.postal_code
+        geo = {
+            'lat': room.location.lat,
+            'lng': room.location.lng
+        }
+        room_nearby = Location.objects.filter(postal_code__exact=zip)
+        context = {
+            'room': room,
+            'geo': json.dumps(geo),
+            'room_nearby': room_nearby,
+            'form': ReservationForm(),
+            'messages': message
+        }
+        return render_to_response('room.html', context, RequestContext(request))
+    if request.is_ajax():
+        if request.method == 'DELETE':
+            try:
+                room = Room.objects.get(id=room_id)
+                room.delete()
+            except Room.DoesNotExist:
+                raise 404
+            other_rooms = request.user.room_set.all()
+            template = render_to_response('room_list_view.html', {'rooms': other_rooms})
+            return HttpResponse(template)
 
 
 def active(request, room_id):
@@ -346,3 +368,32 @@ def active(request, room_id):
                 room.is_active = False
             room.save()
         return JsonResponse({'ok': 200})
+
+
+def reservation_date(request, room_id):
+    room = Room.objects.get(id=room_id)
+    if request.is_ajax():
+        if request.method == 'GET':
+            date_range_invalid = []
+            min_date = room.calender.date_range.split(' - ')[0]
+            max_date = room.calender.date_range.split(' - ')[1]
+            try:
+                reservations = room.reservation_set.all()
+                for reservation in reservations:
+                    date_range_invalid.append(reservation.date_range)
+            except Reservation.DoesNotExist:
+                date_range_invalid = []
+            reservation = {
+                'min_date': min_date,
+                'max_date': max_date,
+                'date_range_invalide': date_range_invalid,
+                'price': room.price.price
+            }
+            return JsonResponse(reservation)
+        if request.method == 'POST':
+            total = request.POST['total']
+            date_range = request.POST['date_range']
+            reservation = Reservation(room=room, guest=request.user, total=total, date_range=date_range, price=room.price.price)
+            reservation.save()
+            messages.add_message(request, messages.SUCCESS, 'Book successfully!')
+            return JsonResponse({'ok': 200})

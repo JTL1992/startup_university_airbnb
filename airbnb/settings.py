@@ -19,6 +19,7 @@ project_app = (
     'base',
     'rooms',
     'airbnb',
+    'reservations'
     )
 
 # Quick-start development settings - unsuitable for production

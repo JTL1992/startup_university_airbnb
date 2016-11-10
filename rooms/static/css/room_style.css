@@ -45,3 +45,10 @@
     font-weight: bold;
     text-decoration: none;
 }
+.book-form {
+    border: 1px solid  #cacccd;
+    padding: 10px;
+    margin-top: 40px;
+    position: relative;
+    width: 300px;
+}

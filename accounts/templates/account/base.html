@@ -3,20 +3,26 @@
 {% load i18n %}
 
 {% block content %}
-
-{% block account_content %}
-    {% if messages %}
-    <div>
-      <strong>Messages:</strong>
-      <ul>
-	{% for message in messages %}
-	<li class="alert alert-{{ message.tags }}">
-        {{message}}
-    </li>
-	{% endfor %}
-      </ul>
+    <div class="container">
+    <div class="row">
+            <div class="col-md-12">
+                {% block account_content %}
+                    {% if messages %}
+                        <div>
+                            <strong>Messages:</strong>
+                            <ul>
+                                {% for message in messages %}
+                                    <li class="alert alert-{{ message.tags }}">
+                                        {{ message }}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+                {% endblock %}
+            </div>
+        </div>
     </div>
-    {% endif %}
-{% endblock %}
+
 
 {% endblock %}

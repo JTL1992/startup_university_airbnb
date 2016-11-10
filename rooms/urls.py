@@ -5,8 +5,8 @@ from django.conf.urls import include, url
 
 
 urlpatterns = [
-    url(r'^$', 'rooms.views.become_a_host', name='become_a_host'),
-    url(r'^rooms$', 'rooms.views.room_list', name='rooms_list'),
+    url(r'^become_a_host$', 'rooms.views.become_a_host', name='become_a_host'),
+    url(r'^$', 'rooms.views.room_list', name='rooms_list'),
     url(r'^(?P<room_id>\d+)/section/$', 'rooms.views.room_section', name='room_section'),
     url(r'^(?P<room_id>\d+)/home_type/$', 'rooms.views.home_type_view', name='home_type'),
     url(r'^(?P<room_id>\d+)/bedrooms/$', 'rooms.views.bedrooms', name='bedrooms'),
@@ -21,7 +21,9 @@ urlpatterns = [
     url(r'^(?P<room_id>\d+)/calenders/$', 'rooms.views.calenders', name='calenders'),
     url(r'^(?P<room_id>\d+)/price/$', 'rooms.views.price', name='price'),
     url(r'^(?P<room_id>\d+)/$', 'rooms.views.rooms', name='room_view'),
+    url(r'^(?P<room_id>\d+)/reservation_date/$', 'rooms.views.reservation_date'),
     url(r'^(?P<room_id>\d+)/active/$', 'rooms.views.active'),
+
 
 
 

@@ -8,6 +8,6 @@ urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^accounts/', include('allauth.urls')),
     url(r'^users/(?P<user_id>\d+)/$', 'accounts.views.public_profile', name='public_profile'),
-    url(r'^become-a-host/', include('rooms.urls')),
+    url(r'rooms/', include('rooms.urls')),
 
 ]
