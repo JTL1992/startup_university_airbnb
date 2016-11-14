@@ -52,3 +52,6 @@
     position: relative;
     width: 300px;
 }
+.total-input{
+    border: 0;
+}

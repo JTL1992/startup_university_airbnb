@@ -1,0 +1,22 @@
+{% if reservations %}
+    {% for reservation in reservations %}
+        <div class="room-list">
+            <div class="row">
+                <div class="col-md-5" style="padding: 10px">
+                    <p>{{ reservation.date_range }}</p>
+                    <a href="{% url 'room_view'  reservation.room.id %}" ><img src="{{ reservation.room.photo.images_1 }}" alt=""
+                         style="height:100px; width: 50%"></a>
+                </div>
+                <div class="col-md-4 text-center list" style="margin-top: 50px">
+                    <a href="{% url 'public_profile' reservation.guest.id %}" ><img src="{{ reservation.guest.userprofile.image_url }}" alt="" style="height:80px; width: 80px"></a>
+                </div>
+                <div class="col-md-3 text-center" style="margin-top: 50px">
+                    <p>Total:</p>
+                    <p>{{ reservation.total }}</p>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+{% else %}
+    <h4>You don't have a reservation yet</h4>
+{% endif %}

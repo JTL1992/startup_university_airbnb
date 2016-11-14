@@ -1,0 +1,15 @@
+<div class="row" style="margin-top: 40px">
+    {% for room in rooms %}
+        <div class="col-md-4">
+            <div class="panel panel-default">
+                <div class="panel-heading preview">
+                    <img src="{{ room.photo.images_1 }}" alt="" style="width: 100%; height: 150px">
+                </div>
+                <div class="panel-body">
+                    <a href="{% url 'room_view' room.id %}">{{ room.namedescription.room_name }}</a>
+                    <p>{{ room.location.route }}, {{ room.location.street_number }}, {{ room.location.locality }}, {{ room.location.country }}</p>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>

@@ -120,8 +120,10 @@
             <div class="col-md-4">
                 <div class="book-form">
                     {{ form.date_range|bootstrap }}
-                    {{ form.total|bootstrap }}
+                    <div id="total" style="display: none;">
+                        {{ form.total|bootstrap }}
                     <input id="submit" type="submit" class="btn btn-info" value="Book">
+                    </div>
                 </div>
             </div>
         </div>
@@ -307,42 +309,59 @@
                         var dateInfo = response;
                         var minDate = dateInfo['min_date'];
                         var maxDate = dateInfo['max_date'];
-                        var dateInvalide = dateInfo['date_range_invalide'];
-                        var invalidedates = [];
+                        var dateInvalid = dateInfo['date_range_invalid'];
+                        var invalidDates = [];
                         total = dateInfo['price'];
+                        console.log(dateInvalid.toString());
                         var now = moment().format('YYYY-MM-DD');
-
                         if (moment(now).isAfter(moment(minDate).format('YYYY-MM-DD'), 'day'))
                             minDate = now;
 
                         $('#id_total').val('1 * ' + dateInfo['price'] + ' = ' + dateInfo['price']);
 
                         var validate = function invalideDate(date) {
-                            dateInvalide.forEach(function (invalid) {
+                            var isInvalid = false;
+                            dateInvalid.forEach(function (invalid) {
+                                console.log(date.format('YYYY-MM-DD'));
                                 if (moment(date.format('YYYY-MM-DD')).isBetween(moment(invalid.split(' - ')[0]).format('YYYY-MM-DD'),
-                                                moment(invalid.split(' - ')[1]).format('YYYY-MM-DD'), null, []))
-                                    invalidedates.push(date.format('YYYY-MM-DD'));
-                                return true
+                                                moment(invalid.split(' - ')[1]).format('YYYY-MM-DD'), null, [])){
+                                    invalidDates.push(date.format('YYYY-MM-DD'));
+                                    isInvalid = true;
+                                    console.log("@@@@"+moment(invalid.split(' - ')[0]).format('YYYY-MM-DD'));
+                                }
                             });
+                            return isInvalid;
                         };
                         $('#id_date_range').daterangepicker({
+                            'autoUpdateInput': false,
                             'minDate': moment(minDate).format('MM/DD/YYYY'),
                             'maxDate': moment(maxDate).format('MM/DD/YYYY'),
                             'opens': 'left',
                             'drops': 'down',
                             'isInvalidDate': validate
                         }).on('apply.daterangepicker', function (ev, picker) {
+                            var isValid = true;
                             var startDate = picker.startDate.format('YYYY-MM-DD');
                             var endDate = picker.endDate.format('YYYY-MM-DD');
-                            invalidedates.forEach(function (invalide) {
+                            invalidDates.forEach(function (invalide) {
                                 if (moment(invalide).isBetween(startDate, endDate, null, [])) {
-                                    return alert('book date is invalid, please pick again');
+                                    isValid = false;
                                 }
                             });
                             console.log(startDate + "," + endDate);
-                            var days = moment(endDate).diff(moment(startDate), 'days') + 1;
-                            total = days * dateInfo['price'];
-                            $('#id_total').val(days + " * " + dateInfo['price'] + " = " + (days * dateInfo['price']))
+                            if (isValid){
+                                var days = moment(endDate).diff(moment(startDate), 'days') + 1;
+                                total = days * dateInfo['price'];
+                                $(this).val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
+                                $('#id_total').val(days + " * " + dateInfo['price'] + " = " + (days * dateInfo['price']));
+                                $('#total').css('display', 'block');
+                            }else{
+                                toastr['warning']('book date is invalid, please pick again!')
+                            }
+
+                        }).on('cancel.daterangepicker', function(){
+                            $(this).val('');
+                            $('#total').css('display', 'none');
                         })
                     }
                 });
@@ -357,8 +376,10 @@
                              csrfmiddlewaretoken: '{{ csrf_token }}'
                         },
                         success: function(response){
-                            if(response.ok == 200)
-                                console.log("post reservation")
+                            if(response.ok == 200){
+                                window.location.href='/trips/';
+                            }
+                            console.log("post reservation")
                         }
                     })
 

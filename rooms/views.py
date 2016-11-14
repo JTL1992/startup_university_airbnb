@@ -45,7 +45,7 @@ def room_list(request):
         user_rooms = user.room_set.all()
     else:
         user_rooms = None
-    return render_to_response('room_list.html', {'rooms': user_rooms, 'messages': message}, RequestContext(request))
+    return render_to_response('room_list.html', {'rooms': user_rooms, 'messages': message, 'render_view': 'room_list_view.html'}, RequestContext(request))
 
 
 @login_required()
@@ -370,30 +370,3 @@ def active(request, room_id):
         return JsonResponse({'ok': 200})
 
 
-def reservation_date(request, room_id):
-    room = Room.objects.get(id=room_id)
-    if request.is_ajax():
-        if request.method == 'GET':
-            date_range_invalid = []
-            min_date = room.calender.date_range.split(' - ')[0]
-            max_date = room.calender.date_range.split(' - ')[1]
-            try:
-                reservations = room.reservation_set.all()
-                for reservation in reservations:
-                    date_range_invalid.append(reservation.date_range)
-            except Reservation.DoesNotExist:
-                date_range_invalid = []
-            reservation = {
-                'min_date': min_date,
-                'max_date': max_date,
-                'date_range_invalide': date_range_invalid,
-                'price': room.price.price
-            }
-            return JsonResponse(reservation)
-        if request.method == 'POST':
-            total = request.POST['total']
-            date_range = request.POST['date_range']
-            reservation = Reservation(room=room, guest=request.user, total=total, date_range=date_range, price=room.price.price)
-            reservation.save()
-            messages.add_message(request, messages.SUCCESS, 'Book successfully!')
-            return JsonResponse({'ok': 200})

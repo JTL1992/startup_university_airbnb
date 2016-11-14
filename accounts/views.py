@@ -66,4 +66,6 @@ def save_profile(user, form):
 @login_required()
 def public_profile(request, user_id):
     message = convert_message_to_toastr(messages.get_messages(request))
-    return render_to_response('public_profile.html', {'messages': message}, RequestContext(request))
+    user = User.objects.get(id=user_id)
+    rooms = user.room_set.all().filter(is_active=True)
+    return render_to_response('public_profile.html', {'messages': message, 'userProfile': user, 'rooms': rooms}, RequestContext(request))

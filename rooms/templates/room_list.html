@@ -20,10 +20,16 @@
                 <div class="col-md-4">
                     <ul class="sidebar-list">
                         <li class="sidebar-item">
-                            <a class="sidebar-link active" href="{% url 'rooms_list' %}">Your Listing</a>
+                            <a class="sidebar-link {% if render_view == 'room_list_view.html' %}active{% endif %}"
+                               href="{% url 'rooms_list' %}">Your Listing</a>
                         </li>
                         <li class="sidebar-item">
-                            <a class="sidebar-link" href="#">Your Reservations</a>
+                            <a class="sidebar-link {% if render_view == 'reservation_list_view.html' %}active{% endif %}"
+                               href="{% url 'reservation_list' %}">Your Reservations</a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link {% if render_view == 'trip_list_view.html' %}active{% endif %}"
+                               href="{% url 'trip_list' %}">Your Trips</a>
                         </li>
                     </ul>
                     <a href="{% url 'become_a_host' %}" class="btn btn-success" style="width: 150px">Add a listing</a>
@@ -34,7 +40,7 @@
                             <h3>Listing</h3>
                         </div>
                         <div class="panel-body">
-                            {% include 'room_list_view.html' %}
+                            {% include render_view %}
                         </div>
                     </div>
                 </div>

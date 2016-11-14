@@ -51,7 +51,10 @@
 {#                           <span class="caret"></span>#}
                         </a>
                         <ul class="dropdown-menu" role="menu">
-                            <li ><a href={% url 'account_profile' %} >Profile</a></li>
+                            <li ><a href={% url 'rooms_list' %} >Your listings</a></li>
+                            <li ><a href={% url 'trip_list' %} >Your trips</a></li>
+                            <li ><a href={% url 'reservation_list' %} >Your reservations</a></li>
+                            <li ><a href={% url 'account_profile' %} >Profile</a></li><hr>
                             <li ><a href={% url 'account_reset_password' %} >Change password</a></li>
                             <li ><a href={% url 'account_logout' %}>Logout</a></li>
                         </ul>
