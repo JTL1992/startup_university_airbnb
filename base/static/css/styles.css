@@ -34,6 +34,10 @@ body {
 
 .preview {
     padding: 0;
+    background-repeat: no-repeat;
+    background-size: 100% 190px;
+    width: 100%;
+    height: 190px;
 }
 /*::selection {*/
     /*color: #fff;*/

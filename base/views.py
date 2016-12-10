@@ -14,6 +14,8 @@ logger = logging.getLogger('base')
 
 
 def home(request):
+    g = geocoder.google('madrid, spain')
+    print(g.json)
     message = convert_message_to_toastr(messages.get_messages(request))
     rooms = Room.objects.all().filter(is_active=True)
     return render_to_response('home.html', {'messages': message, 'rooms': rooms}, RequestContext(request))

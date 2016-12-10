@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load bootstrap %}
+<head>
+    <meta charset="UTF-8">
+    {% block title %}
+    <title>Search</title>
+    {% endblock %}
+    {% block css %}
+        <link rel="stylesheet" href="{% static 'css/reservation.css' %}">
+        <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    {% endblock %}
+</head>
+<body>
+    {% block content %}
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-7 fijo-left" style="margin-top: 8%">
+                    <!-- dates -->
+                    <div class="row">
+                        <div class="col-md-2">
+                            <h5>Dates</h5>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" id="date_start" class="form-control" placeholder="Dates for check in">
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" id="date_end" class="form-control" placeholder="Dates for check out">
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" id="guest" class="form-control" placeholder="1 guest">
+                        </div>
+                    </div>
+                    <hr>
+                    <!-- room type -->
+                    <div class="row">
+                        <div class="col-md-2">
+                            <h5>Room type</h5>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="checkbox" for="entire_home"><i class="fa fa-home"><span>Entire Home</span></i>
+                                <input type="checkbox" id="entire_home" value=""></label>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="checkbox" for="private-room"><i
+                                    class="fa fa-home"><span>Private room</span></i>
+                                <input type="checkbox" id="private-room" value=""></label>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="checkbox" for="shared-room"><i class="fa fa-home"><span>Shared room</span></i>
+                                <input type="checkbox" id="shared-room" value=""></label>
+                        </div>
+                    </div>
+                    <hr>
+                    <!-- price range -->
+                    <div class="row">
+                        <div class="col-md-2">
+                            <h5>Price range</h5>
+                        </div>
+                        <div class="col-md-9">
+                            <input type="text" id="amount" readonly style="border:1px; color: #787e80; font-weight:bold;">
+                            <div id="slider-range"></div>
+                        </div>
+                    </div>
+                    <hr>
+                    <!-- info -->
+                    <div class="row">
+                        <div class="col-md-3 col-md-offset-8">
+                            <h5>300+ rentals.barcelona</h5>
+                        </div>
+                    </div>
+                    <!-- room list -->
+                    <div class="row">
+                           {% include 'search_room_list.html' %}
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            {% include 'footer.html' %}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-5 fijo-right" style="padding: 0">
+                    <div class="iframe">
+                        <div id="map"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endblock %}
+    {% block js %}
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+        <script src="https://maps.googleapis.com/maps/api/js?libraries=places&amp;key=AIzaSyCueh7NkqVaoXCd6EjOh7s5v3WuBEhy3_M&amp;language=en"></script>
+        <script>
+            $(function () {
+                var roomsData = {{ rooms_data|safe }};
+                console.log(roomsData);
+                $("#slider-range").slider({
+                    range: true,
+                    min: 0,
+                    max: 500,
+                    values: [0, 500],
+                    slide: function (event, ui) {
+                        $("#amount").val("€" + ui.values[0] + " - €" + ui.values[1]);
+                    }
+                });
+                $("#amount").val("€" + $("#slider-range").slider("values", 0) +
+                        " - €" + $("#slider-range").slider("values", 1));
+
+                var map = null;
+                var markers = [];
+                createMap(map, markers, roomsData);
+            });
+
+            var createMap = function (map, markers, locations) {
+                var lat = 51;
+                var lng = 0;
+                var latlng = new google.maps.LatLng(lat, lng);
+                var options = {
+                    zoom: 3,
+                    scrollwheel: false,
+                    //streetViewControl: false,
+                    //scaleControl: false,
+                    //draggable: false,
+                    //disableDefaultUI: true,
+                    //disableDoubleClickZoom: true,
+                    mapTypeId: google.maps.MapTypeId.ROADMAP,
+                    center: latlng
+                };
+
+                map = new google.maps.Map(document.getElementById("map"),
+                        options);
+                addMarkersToMap(locations, map, markers)
+            };
+        var addMarkersToMap = function(locations, map, markers){
+                    if(!map){
+                        console.log('map no initialized');
+                        return
+                    }
+                    markers.forEach(function(marker){
+                        marker.setMap(null)
+                    });
+                    var infoWindow = new google.maps.InfoWindow();
+                    var bounds = new google.maps.LatLngBounds();
+                    markers = [];
+
+                locations.forEach(function (location) {
+                    var lat = parseFloat(location.fields.lat);
+                    var lng = parseFloat(location.fields.lng);
+                    console.log(lat+" "+lng);
+                    var latLng = new google.maps.LatLng(lat, lng);
+
+                    var marker = new google.maps.Marker({
+                        position: {lat: lat, lng: lng},
+                        animation: google.maps.Animation.DROP,
+                        map: map
+{#                        icon: '' #}
+                    });
+                    marker.addListener("click", function(){
+                        var htmlContent = "";
+                        infoWindow.setContent(htmlContent);
+                        infoWindow.open(map, marker);
+                        toggleBounce();
+                    });
+
+                    markers.push(marker);
+                    bounds.extend(latLng);
+
+                    function toggleBounce() {
+                        if (marker.getAnimation() !== null) {
+                            marker.setAnimation(null);
+                        } else {
+                            stopBounce();
+                            marker.setAnimation(google.maps.Animation.BOUNCE);
+                        }
+                    }
+
+                    function stopBounce() {
+                        markers.forEach(function (marker) {
+                            marker.setAnimation(null);
+                        })
+                    }
+                });
+                map.fitBounds(bounds);
+                }
+        </script>
+    {% endblock %}
+</body>
+</html>

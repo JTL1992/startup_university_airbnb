@@ -1,0 +1,60 @@
+.box {
+    border: 1px solid grey;
+    padding: 2px;
+}
+
+#map {
+    height: 100%;
+    width: 100%;
+    background: #666;
+}
+
+.fijo-left {
+    position: fixed;
+    left: 0;
+    top:0;
+    bottom: auto;
+    right: auto;
+    z-index: 0;
+    height: 100%;
+    box-sizing: border-box;
+    overflow-y: scroll;
+}
+.fijo-right {
+    position: fixed;
+    left: auto;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    z-index: 0;
+    height: 100%;
+    box-sizing: border-box;
+}
+.iframe {
+  position: relative;
+  height: 100%;
+   /* Ratio 16:9 ( 100%/16*9 = 56.25% ) */
+}
+
+.iframe > *{
+  display: block;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  height: 100%;
+  width: 100%;
+}
+
+.price {
+    font-size:24px;
+    color: #ffffff;
+    width: 80px;
+    height: 50px;
+    background-color: #0f0f0f;
+    opacity: 0.7;
+    text-align: center;
+    position: relative;
+    top: 100px;
+    padding: 5px;
+}
+

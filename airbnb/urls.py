@@ -10,7 +10,8 @@ urlpatterns = [
     url(r'^users/(?P<user_id>\d+)/$', 'accounts.views.public_profile', name='public_profile'),
     url(r'rooms/', include('rooms.urls')),
     url(r'^reservations/$', 'reservations.views.reservation_list', name='reservation_list'),
-    url(r'^trips/$', 'reservations.views.trip_list', name='trip_list')
+    url(r'^trips/$', 'reservations.views.trip_list', name='trip_list'),
+    url(r'^search/$', 'reservations.views.search', name='search'),
 
 
 ]

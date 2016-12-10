@@ -9,6 +9,7 @@
     {% endblock %}
 {% block css %}
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
 {% endblock %}
 </head>
 <body>
@@ -16,17 +17,20 @@
     <div style="margin-top: 5%"></div>
     <div class="container">
         <div class="row">
-            <div class="col-md-6">
-                <input type="text" class="form-control" placeholder="Where to go?">
+            <div class="col-md-4">
+                <input type="text" id="place-form" class="place form-control" placeholder="Where to go?">
             </div>
             <div class="col-md-2">
-                <input type="text" class="form-control" placeholder="Start Date">
+                <input type="text" id="date-start" class="form-control" placeholder="Start Date">
             </div>
             <div class="col-md-2">
-                <input type="text" class="form-control" placeholder="End Date">
+                <input type="text" id="date-end" class="form-control" placeholder="End Date">
             </div>
             <div class="col-md-2">
-                <button class="btn btn-primary" style="width: 150px"> Search </button>
+                <input type="number" id="guest" class="form-control" placeholder="1 guest">
+            </div>
+            <div class="col-md-2">
+                <button id="submit" class="btn btn-primary" style="width: 150px"> Search </button>
             </div>
 
         </div>
@@ -46,6 +50,54 @@
             {% endfor %}
          </div>
     </div>
+{% endblock %}
+{% block js %}
+    <script src="https://maps.googleapis.com/maps/api/js?libraries=places&amp;key=AIzaSyCueh7NkqVaoXCd6EjOh7s5v3WuBEhy3_M&amp;language=en"></script>
+    <script src="{% static 'js/jquery.geocomplete.js' %}"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
+    <script type="application/javascript">
+            $(function(){
+                $('.place').geocomplete({
+                });
+                $('#date-start').daterangepicker({
+                    'autoUpdateInput': false
+                }).on('apply.daterangepicker',function(e, picker){
+                    $(this).val(picker.startDate.format('MM/DD/YYYY'));
+                    $('#date-end').val(picker.endDate.format('MM/DD/YYYY'))
+                }).on('cancel.daterangepicker',function(e, picker){
+                    $(this).val("");
+                    $('#date-end').val("");
+                });
+                $('#date-end').click(function(){
+                    console.log('triger');
+                     $('#date-start').data('daterangepicker').show();
+                });
+                $('#submit').click(function(){
+                    var place = $('#place-form').val();
+                    var dateStart = $('#date-start').val();
+                    var dateEnd = $('#date-end').val();
+                    var guest = $('#guest').val();
+                    window.location.href = '/search?place='+place+"&start_date="+dateStart+"&end_date="+dateEnd+"&guest="+guest;
+{#                    console.log(place+" "+dateStart+" "+guest);#}
+{#                    $.ajax({#}
+{#                        type: 'GET',#}
+{#                        url: '/search',#}
+{#                        data: {#}
+{#                            place : $('#place-form').val(),#}
+{#                            start_date: $('#date-start').val(),#}
+{#                            end_date: $('#date-end').val(),#}
+{#                            guest: $('#guest').val()#}
+{#                        },#}
+{#                        success: function(e, xhr, settings){#}
+{#                            if (xhr.status == 278){#}
+{#                                window.location.href = xhr.getResponseHeader();#}
+{#                            }#}
+{#                        }#}
+{#                    })#}
+                });
+            })
+        </script>
 {% endblock %}
 
 </body>

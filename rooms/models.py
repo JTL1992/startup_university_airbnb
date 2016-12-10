@@ -294,6 +294,8 @@ class NameDescriptionForm(forms.ModelForm):
 class Calender(models.Model):
     room = models.OneToOneField(Room)
     date_range = models.CharField(max_length=25, verbose_name='select date range ')
+    start_date = models.DateField(verbose_name='Start date', blank=True)
+    end_date = models.DateField(verbose_name='End date', blank=True)
 
     def __unicode__(self):
         return self.room.owner.username

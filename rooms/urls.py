@@ -23,12 +23,4 @@ urlpatterns = [
     url(r'^(?P<room_id>\d+)/$', 'rooms.views.rooms', name='room_view'),
     url(r'^(?P<room_id>\d+)/reservation_date/$', 'reservations.views.reservation_date'),
     url(r'^(?P<room_id>\d+)/active/$', 'rooms.views.active'),
-
-
-
-
-
-
-
-
 ]

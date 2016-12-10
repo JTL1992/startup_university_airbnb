@@ -1,5 +1,6 @@
 import json
 
+from datetime import datetime
 import geocoder
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -301,7 +302,13 @@ def calenders(request, room_id):
     if request.method == 'POST':
         form = CalenderForm(request.POST, instance=calender)
         if form.is_valid():
-            form.save()
+            data = form.save(commit=False)
+            print(data)
+            start_date = data.date_range.split(' - ')[0]
+            end_date = data.date_range.split(' - ')[1]
+            data.start_date = datetime.strptime(start_date, '%m/%d/%Y')
+            data.end_date = datetime.strptime(end_date, '%m/%d/%Y')
+            data.save()
             messages.add_message(request, messages.SUCCESS, 'edit your calender successfully!')
             return HttpResponseRedirect(reverse('price', kwargs={'room_id': room_id}))
     else:
